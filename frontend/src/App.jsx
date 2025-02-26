@@ -1,28 +1,36 @@
-/*************  ✨ Codeium Command 🌟  *************/
 import React, { useState } from 'react';
-import Navbar from './components/Navbar'; // Navbar-Komponente
-import SearchBar from './components/SearchBar'; // SearchBar-Komponente
-import Map from './components/Map'; // Map-Komponente
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import SearchBar from './components/Searchbar.jsx';
+import Map from './components/Map';
+import Login from './pages/Login.jsx'; 
+import Register from './pages/Register.jsx'; 
 
 const App = () => {
   const [location, setLocation] = useState(null);
 
   const handleSearch = (location) => {
     if (location) {
-      setLocation(location);  // Setzt den Standort basierend auf der Suche
+      setLocation(location);
     }
   };
 
   return (
-    <div>
+    <Router>
+      <h1>Hallo</h1>
       <Navbar />
-      <SearchBar onSearch={handleSearch} />
-      {location && <Map location={location} />}
-
-    </div>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <SearchBar onSearch={handleSearch} />
+            {location && <Map location={location} />}
+          </>
+        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 };
 
 export default App;
-/******  0afb0119-f17b-4841-9b3a-83b760e6cde2  *******/

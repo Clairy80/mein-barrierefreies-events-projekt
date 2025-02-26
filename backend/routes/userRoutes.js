@@ -79,6 +79,40 @@ router.post('/reset-password', async (req, res) => {
     }
 });
 
+// Login
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+      // Nutzer finden
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(400).json({ message: "Benutzer nicht gefunden" });
+      }
+      
+      // Passwort prüfen
+      const isValid = await bcrypt.compare(password, user.password);
+      if (!isValid) {
+        return res.status(400).json({ message: "Ungültige Zugangsdaten" });
+      }
+      
+      // JWT-Token generieren
+      const token = jwt.sign(
+        { id: user._id, username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+      
+      res.status(200).json({
+        message: "Login erfolgreich",
+        token,
+        user: { id: user._id, username: user.username, role: user.role, accessibilityOptions: user.accessibilityOptions }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Fehler beim Login", error: error.message });
+    }
+  });
+  
+
 // Benutzerprofil abrufen
 router.get('/profile', protect, async (req, res) => {
     try {

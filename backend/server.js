@@ -12,15 +12,12 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors());  // ✅ CORS korrekt eingebunden
 
 const port = process.env.PORT || 5001;
 
 // MongoDB-Verbindung herstellen
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Datenbankverbindung erfolgreich');
     app.listen(port, () => {
@@ -28,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
     });
   })
   .catch(err => console.error('❌ Datenbankverbindungsfehler:', err));
-
+  
 // Routen
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
@@ -51,3 +48,4 @@ console.log('🔍 Verfügbare Routen:');
 app._router.stack.forEach((r) => {
   if (r.route && r.route.path) console.log(`➡️ ${r.route.path}`);
 });
+

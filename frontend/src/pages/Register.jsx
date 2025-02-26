@@ -9,6 +9,7 @@ const Register = () => {
     role: "user",
     accessibilityOptions: [],
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const accessibilityOptions = [
@@ -23,23 +24,29 @@ const Register = () => {
   };
 
   const handleCheckboxChange = (option) => {
-    setFormData((prevData) => {
-      const newOptions = prevData.accessibilityOptions.includes(option)
+    setFormData((prevData) => ({
+      ...prevData,
+      accessibilityOptions: prevData.accessibilityOptions.includes(option)
         ? prevData.accessibilityOptions.filter((item) => item !== option)
-        : [...prevData.accessibilityOptions, option];
-      return { ...prevData, accessibilityOptions: newOptions };
-    });
+        : [...prevData.accessibilityOptions, option],
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Fehler zurücksetzen
+
+    if (formData.password.length < 6) {
+      setError("Das Passwort muss mindestens 6 Zeichen lang sein.");
+      return;
+    }
+
     try {
       const response = await axios.post("/api/users/register", formData);
       alert(response.data.message);
       navigate("/login");
     } catch (error) {
-      console.error(error);
-      alert("Fehler bei der Registrierung");
+      setError(error.response?.data?.message || "Fehler bei der Registrierung.");
     }
   };
 
@@ -59,7 +66,7 @@ const Register = () => {
         <input
           type="password"
           name="password"
-          placeholder="Passwort"
+          placeholder="Passwort (min. 6 Zeichen)"
           value={formData.password}
           onChange={handleChange}
           className="w-full p-2 mb-2 border rounded"
@@ -90,6 +97,8 @@ const Register = () => {
             </label>
           ))}
         </fieldset>
+
+        {error && <p className="text-red-500 mb-2">{error}</p>}
 
         <button
           type="submit"
