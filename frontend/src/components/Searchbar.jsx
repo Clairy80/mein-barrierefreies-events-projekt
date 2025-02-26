@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch }) => {
   const handleSearch = (event) => {
     event.preventDefault();
     if (location) {
-      onSearch(location); // Übergibt die Eingabe zur Handhabung in der App
+      onSearch(location);
     }
   };
 

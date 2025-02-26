@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    role: "user",
-    accessibilityOptions: [],
+    username: '',
+    password: '',
+    role: 'user',
+    accessibilityOptions: []
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const accessibilityOptions = [
-    "Rollstuhlgerecht",
-    "Sehbehindertengerecht (Braille, Audio)",
-    "Hörbehindertengerecht (Gebärdensprache)",
-    "Neurodivergenzfreundlich",
+    'Rollstuhlgerecht',
+    'Sehbehindertengerecht (Braille, Audio)',
+    'Hörbehindertengerecht (Gebärdensprache)',
+    'Neurodivergenzfreundlich'
   ];
 
   const handleChange = (e) => {
@@ -24,29 +24,23 @@ const Register = () => {
   };
 
   const handleCheckboxChange = (option) => {
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       accessibilityOptions: prevData.accessibilityOptions.includes(option)
-        ? prevData.accessibilityOptions.filter((item) => item !== option)
-        : [...prevData.accessibilityOptions, option],
+        ? prevData.accessibilityOptions.filter(item => item !== option)
+        : [...prevData.accessibilityOptions, option]
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Fehler zurücksetzen
-
-    if (formData.password.length < 6) {
-      setError("Das Passwort muss mindestens 6 Zeichen lang sein.");
-      return;
-    }
-
+    setError('');
     try {
-      const response = await axios.post("/api/users/register", formData);
+      const response = await axios.post('http://localhost:5001/api/users/register', formData);
       alert(response.data.message);
-      navigate("/login");
+      navigate('/login');
     } catch (error) {
-      setError(error.response?.data?.message || "Fehler bei der Registrierung.");
+      setError(error.response?.data?.message || 'Fehler bei der Registrierung');
     }
   };
 
@@ -84,7 +78,7 @@ const Register = () => {
 
         <fieldset className="mb-4">
           <legend className="font-semibold">Barrierefreiheit</legend>
-          {accessibilityOptions.map((option) => (
+          {accessibilityOptions.map(option => (
             <label key={option} className="block">
               <input
                 type="checkbox"
@@ -100,10 +94,7 @@ const Register = () => {
 
         {error && <p className="text-red-500 mb-2">{error}</p>}
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
           Registrieren
         </button>
       </form>
