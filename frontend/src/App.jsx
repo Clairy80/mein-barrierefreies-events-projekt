@@ -7,16 +7,19 @@ import Map from './components/Map';
 import EventList from './components/EventList';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import ImpressumPage from './pages/ImpressumPage'; // Import der Impressum-Seite
 import AccessibilityToolbar from './components/AccessibilityToolbar';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
+import DatenschutzPage from './pages/DatenschutzPage.jsx';
+import SpendenPage from './pages/SpendenPage.jsx';
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState(null);
   const [events, setEvents] = useState([]);
 
-  // Automatische Standortsuche beim initialen Laden, falls kein Standort gesetzt ist
+  // Automatische Standortsuche beim initialen Laden
   useEffect(() => {
     if (!location && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -30,12 +33,12 @@ const App = () => {
     }
   }, [location]);
 
-  // handleSearch: Aktualisiert einfach den searchQuery-State
+  // handleSearch: Aktualisiert den searchQuery-State
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  // useEffect für Geocoding: Wann immer sich searchQuery ändert, wird ein Geocoding-Call ausgeführt.
+  // useEffect für Geocoding: Wann immer sich searchQuery ändert, wird ein Geocoding-Call ausgeführt
   useEffect(() => {
     if (searchQuery) {
       const fetchGeocode = async () => {
@@ -95,6 +98,9 @@ const App = () => {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/impressum" element={<ImpressumPage />} />
+        <Route path="/datenschutz" element={<DatenschutzPage/>} />
+        <Route path="/spenden" element={<SpendenPage/>} />
       </Routes>
       <Footer />
     </Router>
