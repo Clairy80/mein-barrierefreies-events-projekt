@@ -99,7 +99,11 @@ Benutzerverwaltung,
 Mehrsprachigkeit und Barrierefreiheit über eine AccessibilityToolbar,
 sowie eine saubere, modulare Codebasis.
 
+Bei Fragen oder Problemen wende dich gern an den Entwickler.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+
 
 Currently, two official plugins are available:
 

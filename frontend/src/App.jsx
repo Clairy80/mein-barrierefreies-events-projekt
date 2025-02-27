@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer'; // NEU: Footer importiert
+import Footer from './components/Footer';
 import SearchBar from './components/Searchbar.jsx';
 import Map from './components/Map';
 import EventList from './components/EventList';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import ImpressumPage from './pages/ImpressumPage';    // NEU
-import DatenschutzPage from './pages/DatenschutzPage'; // NEU
-import SpendenPage from './pages/SpendenPage';         // NEU
 import AccessibilityToolbar from './components/AccessibilityToolbar';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
@@ -19,7 +16,7 @@ const App = () => {
   const [location, setLocation] = useState(null);
   const [events, setEvents] = useState([]);
 
-  // Automatische Standortsuche
+  // Automatische Standortsuche beim initialen Laden, falls kein Standort gesetzt ist
   useEffect(() => {
     if (!location && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -33,12 +30,38 @@ const App = () => {
     }
   }, [location]);
 
-  // Suchanfrage aus der SearchBar
+  // handleSearch: Aktualisiert einfach den searchQuery-State
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  // Events laden, abhängig vom Suchbegriff
+  // useEffect für Geocoding: Wann immer sich searchQuery ändert, wird ein Geocoding-Call ausgeführt.
+  useEffect(() => {
+    if (searchQuery) {
+      const fetchGeocode = async () => {
+        try {
+          const geoResponse = await axios.get(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`,
+            { headers: { 'Accept-Language': 'de' } }
+          );
+          if (geoResponse.data && geoResponse.data.length > 0) {
+            const firstResult = geoResponse.data[0];
+            setLocation({
+              lat: parseFloat(firstResult.lat),
+              lng: parseFloat(firstResult.lon),
+            });
+          } else {
+            console.warn("Kein Ergebnis für Geocoding gefunden.");
+          }
+        } catch (error) {
+          console.error('Fehler beim Geocoding:', error);
+        }
+      };
+      fetchGeocode();
+    }
+  }, [searchQuery]);
+
+  // useEffect: Lädt Events basierend auf dem Suchbegriff
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -59,9 +82,7 @@ const App = () => {
     <Router>
       <AccessibilityToolbar />
       <Navbar />
-
       <Routes>
-        {/* Startseite */}
         <Route
           path="/"
           element={
@@ -72,18 +93,10 @@ const App = () => {
             </>
           }
         />
-
-        {/* Login / Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* NEUE ROUTEN für Footer-Links */}
-        <Route path="/impressum" element={<ImpressumPage />} />
-        <Route path="/datenschutz" element={<DatenschutzPage />} />
-        <Route path="/spenden" element={<SpendenPage />} />
       </Routes>
-
-      <Footer /> {/* Footer am Seitenende */}
+      <Footer />
     </Router>
   );
 };

@@ -7,6 +7,7 @@ const eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
   lat: { type: Number, required: true },
   lon: { type: Number, required: true },
+  eventType: { type: String, required: true }, // Neu: Veranstaltungstyp
   accessibilityOptions: {
     ramp: { type: Boolean, default: false },
     elevator: { type: Boolean, default: false },
@@ -20,6 +21,7 @@ const eventSchema = new mongoose.Schema({
   elevatorAccessible: { type: Boolean, default: false },
   languageOptions: [String],
   ratings: [{ userId: mongoose.Schema.Types.ObjectId, rating: Number, comment: String }],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // Optional: Ersteller des Events
 });
 
 const Event = mongoose.model('Event', eventSchema);
