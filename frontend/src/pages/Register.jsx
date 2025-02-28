@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     role: 'user',
+    email: '',
+    organization: '',
+    address: '',
+    date: '', // Datum im Format YYYY-MM-DD
+    time: '', // Uhrzeit im Format HH:MM
     accessibilityOptions: []
   });
+  
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -20,7 +27,7 @@ const Register = () => {
   ];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleCheckboxChange = (option) => {
@@ -75,7 +82,53 @@ const Register = () => {
           <option value="user">Teilnehmer*in</option>
           <option value="organizer">Veranstalter*in</option>
         </select>
-
+        {formData.role === 'organizer' && (
+          <>
+            <input
+              type="text"
+              name="organization"
+              placeholder="Name der Organisation"
+              value={formData.organization}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border rounded"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="E-Mail"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border rounded"
+              required
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Adresse"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border rounded"
+              required
+            />
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border rounded"
+              required
+            />
+            <input
+              type="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border rounded"
+              required
+            />
+          </>
+        )}
         <fieldset className="mb-4">
           <legend className="font-semibold">Barrierefreiheit</legend>
           {accessibilityOptions.map(option => (
@@ -91,9 +144,7 @@ const Register = () => {
             </label>
           ))}
         </fieldset>
-
         {error && <p className="text-red-500 mb-2">{error}</p>}
-
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
           Registrieren
         </button>

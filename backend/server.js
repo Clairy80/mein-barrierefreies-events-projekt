@@ -5,6 +5,9 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import Event from './models/Event.js';
+// server.js
+import { router as eventRoutes } from './routes/eventRoutes.js'; // Benannter Import
+
 
 dotenv.config();
 
