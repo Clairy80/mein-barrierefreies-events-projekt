@@ -5,9 +5,6 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import Event from './models/Event.js';
-// server.js
-import { router as eventRoutes } from './routes/eventRoutes.js'; // Benannter Import
-
 
 dotenv.config();
 
@@ -28,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
     });
   })
   .catch(err => console.error('❌ Datenbankverbindungsfehler:', err));
-  
+
 // Routen
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
@@ -51,4 +48,3 @@ console.log('🔍 Verfügbare Routen:');
 app._router.stack.forEach((r) => {
   if (r.route && r.route.path) console.log(`➡️ ${r.route.path}`);
 });
-

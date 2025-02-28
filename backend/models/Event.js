@@ -7,7 +7,12 @@ const eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
   lat: { type: Number, required: true },
   lon: { type: Number, required: true },
-  eventType: { type: String, required: true }, // Neu: Veranstaltungstyp
+  eventType: { 
+    type: String, 
+    required: true, 
+    enum: ['Konzert', 'Vortrag', 'Workshop', 'Seminar', 'Festival'] 
+  },
+  
   accessibilityOptions: {
     ramp: { type: Boolean, default: false },
     elevator: { type: Boolean, default: false },
